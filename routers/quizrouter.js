@@ -1,14 +1,14 @@
-// routers/quizRouter.js
+
 const express = require('express');
 const router = express.Router();
-const QuizController = require('../controllers/quizController');
+const QuizController = require('../controllers/quizcontroller');
 
-// Define the routes
+//  routes
 router.get('/', (req, res) => {
     res.send('Quiz homepage');
 });
 
-// Example of other routes you might define
+
 router.post('/create', QuizController.createQuiz);
 
 router.get('/active', QuizController.getActiveQuiz);

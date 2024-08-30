@@ -1,4 +1,4 @@
-const Quiz = require('../models/Quiz');
+const Quiz = require('../models/quiz');
 
 // Create a new quiz
 exports.createQuiz = async (req, res) => {
@@ -20,13 +20,17 @@ exports.createQuiz = async (req, res) => {
 };
 
 
-// Get active quiz
+// active quiz
 exports.getActiveQuiz = async (req, res) => {
     try {
         const now = new Date();
         const activeQuiz = await Quiz.findOne({ startDate: { $lte: now }, endDate: { $gte: now } });
-        if (!activeQuiz) return res.status(404).json({ message: 'No active quiz found' });
-        res.status(200).json(activeQuiz);
+        if (!activeQuiz) {
+            return res.status(404).json({ message: 'No active quiz found' });
+        } else {
+            res.status(200).json(activeQuiz);
+        }
+        
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
     }
@@ -34,7 +38,7 @@ exports.getActiveQuiz = async (req, res) => {
 
 
 
-// Get quiz result by ID
+// quiz result by ID
 exports.getQuizResult = async (req, res) => {
     try {
         const quiz = await Quiz.findById(req.params.id);
@@ -44,10 +48,10 @@ exports.getQuizResult = async (req, res) => {
         const endDatePlusFiveMinutes = new Date(quiz.endDate.getTime() + 5 * 60000);
 
         if (now < endDatePlusFiveMinutes) {
-            return res.status(403).json({ message: 'Result not available yet' });
+            res.status(403).json({ message: 'Result not available yet' });
+        } else {
+            res.status(200).json({ rightAnswer: quiz.options[quiz.rightAnswer] });
         }
-
-        res.status(200).json({ rightAnswer: quiz.options[quiz.rightAnswer] });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
     }

@@ -12,7 +12,7 @@ const session=require('express-session')
 const cron = require('node-cron');
 const Quiz = require('./models/quiz');
 
-cron.schedule('* * * * *', async () => {
+cron.schedule('* * * * * *', async () => {
     const now = new Date();
     try {
         await Quiz.updateMany({ startDate: { $lte: now }, endDate: { $gte: now } }, { status: 'active' });
@@ -21,6 +21,7 @@ cron.schedule('* * * * *', async () => {
         console.error('Error updating quiz status', err);
     }
 });
+
 
 
 
